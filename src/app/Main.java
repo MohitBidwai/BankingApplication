@@ -39,23 +39,23 @@ public class Main {
 				openAccount(scanner, bankService);
 				break;
 			case 2:
-				deposit(scanner,bankService);
+				deposit(scanner, bankService);
 				break;
 			case 3:
-				withdraw(scanner);
+				withdraw(scanner, bankService);
 				break;
 			case 4:
-				transfer(scanner);
+				transfer(scanner, bankService);
 				break;
 			case 5:
-				statement(scanner);
+				statement(scanner, bankService);
 				break;
 
 			case 6:
 				listAccount(scanner, bankService);
 				break;
 			case 7:
-				searchAccount(scanner);
+				searchAccounts(scanner,bankService);
 				break;
 			}
 		}
@@ -72,49 +72,79 @@ public class Main {
 		String type = scanner.nextLine().trim();
 		System.out.println("Intial deposit");
 		String amountStr = scanner.nextLine().trim();
-		Double intial = Double.valueOf(amountStr);
+		String accountNumber = bankService.openAccount(name, email, type);
+		Double initial = Double.valueOf(amountStr);
+		if (initial > 0) {
+			bankService.deposit(accountNumber, initial, "Deposit");
+		}
 		bankService.openAccount(name, email, type);
+		System.out.println("Account opened :" + accountNumber);
 
 	}
 
 	private static void deposit(Scanner scanner, BankService bankService) {
 		// TODO Auto-generated method stub
-		
-    
-    
-    System.out.println("Enter the Accout number :");
-    String accountNumber = scanner.nextLine().trim();
-    System.out.println("Enter the Amount you want to deposit");
-    Double amount = scanner.nextDouble();
-    bankService.deposit(accountNumber,amount,"Deposited");
-    System.out.println("Amount has been deposited to your account");
-    
-	}
 
-	private static void withdraw(Scanner scanner) {
-		// TODO Auto-generated method stub
+		System.out.println("Enter the Accout number :");
+		String accountNumber = scanner.nextLine().trim();
+		System.out.println("Enter the Amount you want to deposit");
+		Double amount = scanner.nextDouble();
+		bankService.deposit(accountNumber, amount, "Deposited");
+		System.out.println("Amount has been deposited to your account");
 
 	}
 
-	private static void transfer(Scanner scanner) {
+	private static void withdraw(Scanner scanner, BankService bankService) {
 		// TODO Auto-generated method stub
+		System.out.println("Enter the Accout number :");
+		String accountNumber = scanner.nextLine().trim();
+		System.out.println("Enter the Amount you want to withdraw");
+		Double amount = scanner.nextDouble();
+		bankService.withdraw(accountNumber, amount, "Withdraw");
+		System.out.println("Amount has been Withdrawn from your account");
+	}
+
+	private static void transfer(Scanner scanner, BankService bankService) {
+		// TODO Auto-generated method stub
+		System.out.println("Enter the Accout from which you want to transfer money :");
+		String fromAccount = scanner.nextLine().trim();
+		System.out.println("Enter the Accout to which you want to transfer money :");
+		String toAccount = scanner.nextLine().trim();
+		System.out.println("Enter the amount you want to transfer:");
+		Double amount = scanner.nextDouble();
+		bankService.transfer(fromAccount, toAccount, amount, "Transfer");
+		System.out.println("Amount has been transfered successfully");
 
 	}
 
-	private static void statement(Scanner scanner) {
+	private static void statement(Scanner scanner, BankService bankService) {
 		// TODO Auto-generated method stub
+		System.out.println("Enter the Accout Number :");
+		String accountNumber = scanner.nextLine().trim();
+		bankService.getStatement(accountNumber).
+		forEach(t -> {
+		    System.out.println(
+		        t.getTimestamp() + " | " +
+		        t.getNote() + " | " +
+		        t.getType()
+		    );
+		});
+
 
 	}
 
 	private static void listAccount(Scanner scanner, BankService bankService) {
 		// TODO Auto-generated method stub
 		bankService.listAccounts().forEach(
-				a -> System.out.println(a.getAccountNumber() + " | " + a.getAccountType() + "|"  + a.getBalance()));
+				a -> System.out.println(a.getAccountNumber() + " | " + a.getAccountType() + "|" + a.getBalance()));
 
 	}
 
-	private static void searchAccount(Scanner scanner) {
+	private static void searchAccounts(Scanner scanner, BankService bankService) {
 		// TODO Auto-generated method stub
+		System.out.println("Enter the CustomerName:  ");
+		String customerName = scanner.nextLine().trim();
+		bankService.findAccountByCustomerName(customerName).forEach(account->System.out.println(account.getAccountNumber() + "|" + account.getAccountType()));
 
 	}
 }

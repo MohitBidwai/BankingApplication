@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import domain.Account;
+import domain.Customer;
 
 public class AccountRepository {
 
@@ -27,6 +28,19 @@ public class AccountRepository {
 		return Optional.ofNullable(accountsByNumber.get(accountNumber));
 		// TODO Auto-generated method stub
 		
+	}
+	public List<Account> findByCustomerId(String customerID)
+	{
+		List<Account>result = new ArrayList<>();
+		for(Account a :accountsByNumber.values() )
+		{
+			if(a.getCustomerId().equals(customerID))
+					{
+				     result.add(a);
+					}
+			
+		}
+		return result;
 	}
 
 }
